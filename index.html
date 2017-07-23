@@ -7,14 +7,61 @@
 </head>
 <body>
     <div id="app">
-        {{ message }}
+        <nav class="navbar">
+          <div class="navbar-brand">
+            <a class="navbar-item" href="http://www.netatmo.com">
+              <img src="https://www.netatmo.com/images/common/logo_netatmo.svg" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28">
+            </a>
+          </div>
+        </nav>
+        <div class="container">
+            <div class="section">
+                <div class="columns">
+                    <div class="column is-4">
+                        <h1 class="title">To do list</h1>
+                        <div class="field">
+                            <label class="label">Add to list</label>
+                            <div class="control">
+                                <input class="input" v-model="newItem" type="text" placeholder="Add to list"
+                                    @keyup.enter="addToList()">
+                            </div>
+                        </div>
+                        <article v-for="item in items" class="message is-info">
+                            <div class="message-body level">
+                                <p clas="level-left"> {{item}} </p>
+                                <button class="level-right delete" @click="removeFromList(item)"></button>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
     <script type="text/javascript">
         var app = new Vue({
             el: '#app',
             data: {
-                message: 'Hello World !'
+                newItem: '',
+                items: [
+                    'Internet',
+                    'Javascript',
+                    'Vue js'
+                ]
+            },
+            methods: {
+
+                removeFromList(item) {
+                    var index = this.items.indexOf(item)
+                    if(index > -1) {
+                        this.items.splice(index, 1);
+                    }
+                },
+
+                addToList() {
+                    this.items.push(this.newItem)
+                    this.newItem = ''
+                }
             }
         })
     </script>

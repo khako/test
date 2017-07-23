@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <title>Test frontend</title>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.3/css/bulma.min.css">
+    <style type="text/css">
+        .line-through {
+            text-decoration: line-through;
+        }
+    </style>
 </head>
 <body>
     <div id="app">
@@ -19,6 +24,10 @@
                 <div class="columns">
                     <div class="column is-4">
                         <h1 class="title">To do list</h1>
+                        <label class="subtitle checkbox">
+                            <input type="checkbox" :checked="showIncompleteTodos" v-model="showIncompleteTodos" >
+                            Show uncompleted todos
+                        </label>
                         <div class="field">
                             <label class="label">Add to list</label>
                             <div class="control">
@@ -26,44 +35,64 @@
                                     @keyup.enter="addToList()">
                             </div>
                         </div>
-                        <article v-for="item in items" class="message is-info">
-                            <div class="message-body level">
-                                <p clas="level-left"> {{item}} </p>
+                        <article v-for="item in uncompletedTodos" class="message is-info">
+                            <label class="checkbox message-body level" :class="{'line-through': item.done}">
+                                <p clas="level-left">
+                                    <input type="checkbox" :checked="item.done" @change="setDone(item)">
+                                    {{item.name}}
+                                </p>
                                 <button class="level-right delete" @click="removeFromList(item)"></button>
-                            </div>
+                            </label>
                         </article>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
-    <script type="text/javascript">
-        var app = new Vue({
-            el: '#app',
-            data: {
-                newItem: '',
-                items: [
-                    'Internet',
-                    'Javascript',
-                    'Vue js'
-                ]
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+<script type="text/javascript">
+
+    const app = new Vue({
+        el: '#app',
+        data: {
+            newItem: '',
+            showIncompleteTodos: false,
+            items: [
+                {'name': 'Internet', 'done': false},
+                {'name': 'Javascript', 'done': false},
+                {'name': 'Netatmo', 'done': false}
+            ]
+        },
+
+        computed: {
+            uncompletedTodos() {
+                return this.showIncompleteTodos ? this.items : this.items.filter(i => !i.done)
+            }
+        },
+
+        methods: {
+
+            removeFromList(item) {
+                const index = this.items.indexOf(item)
+                if(index > -1) {
+                    this.items.splice(index, 1);
+                }
             },
-            methods: {
 
-                removeFromList(item) {
-                    var index = this.items.indexOf(item)
-                    if(index > -1) {
-                        this.items.splice(index, 1);
-                    }
-                },
+            addToList() {
+                this.items.push({'name': this.newItem, 'done': false})
+                this.newItem = ''
+            },
 
-                addToList() {
-                    this.items.push(this.newItem)
-                    this.newItem = ''
+            setDone(item) {
+                const index = this.items.indexOf(item)
+                if(index > -1) {
+                    this.items[index].done = !this.items[index].done
                 }
             }
-        })
-    </script>
+        }
+    })
+</script>
 </body>
 </html>

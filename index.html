@@ -36,13 +36,7 @@
                             </div>
                         </div>
                         <article v-for="item in uncompletedTodos" class="message is-info">
-                            <label class="checkbox message-body level" :class="{'line-through': item.done}">
-                                <p clas="level-left">
-                                    <input type="checkbox" :checked="item.done" @change="setDone(item)">
-                                    {{item.name}}
-                                </p>
-                                <button class="level-right delete" @click="removeFromList(item)"></button>
-                            </label>
+                            <todo :item="item" @done="setDone($event)" @remove="removeFromList($event)"></todo>
                         </article>
                     </div>
                 </div>
@@ -53,6 +47,34 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
 <script type="text/javascript">
+
+    const Todo = {
+        props: {
+            item: Object
+        },
+
+        template: `
+            <label class="checkbox message-body level" :class="{'line-through': item.done}">
+                <p clas="level-left">
+                    <input type="checkbox" :checked="item.done" @change="isDone(item)">
+                    {{item.name}}
+                </p>
+                <button class="level-right delete" @click="removeFromList(item)"></button>
+            </label>
+        `,
+
+        methods: {
+            isDone (item) {
+                this.$emit('done', item)
+            },
+
+            removeFromList (item) {
+                this.$emit('remove', item)
+            }
+        }
+    }
+
+    Vue.component('todo', Todo)
 
     const app = new Vue({
         el: '#app',
@@ -68,7 +90,8 @@
 
         computed: {
             uncompletedTodos() {
-                return this.showIncompleteTodos ? _.orderBy(this.items, 'done', 'desc') : this.items.filter(i => !i.done)
+                return this.showIncompleteTodos ?
+                        _.orderBy(this.items, 'done', 'desc') : this.items.filter(i => !i.done)
             }
         },
 
@@ -92,6 +115,7 @@
                     this.items[index].done = !this.items[index].done
                 }
             }
+
         }
     })
 </script>

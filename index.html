@@ -39,8 +39,11 @@
                         </div>
                         <article v-for="todo in listTodos" class="message is-info">
                             <div class="message-body level">
-                                <p clas="level-left"> {{ todo }} </p>
-                                <button class="level-right delete" @click="deleteTodo"></button>
+                                <p clas="level-left">
+                                    <!-- <input type="checkbox" :checked="todo.done" @change="setDone"> -->
+                                    {{todo}}
+                                </p>
+                                <button class="level-right delete" @click="deleteTodo(todo)"></button>
                             </div>
                         </article>
                     </div>
@@ -66,7 +69,6 @@
                 listTodos() {
                     // return all todos if showAllTodos is set to true,
                     // return only incompleted todos else
-                    return this.todos;
                 }
             },
 

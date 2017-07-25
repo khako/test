@@ -22,14 +22,16 @@
                         <div class="field">
                             <label class="label">Add to list</label>
                             <div class="control">
-                                <input class="input" v-model="newItem" type="text" placeholder="Add to list"
-                                    @keyup.enter="addToList()">
+                                <input class="input" type="text"
+                                    v-model="newItem"
+                                    placeholder="Add to list"
+                                    @keyup.enter="addTodo" />
                             </div>
                         </div>
-                        <article v-for="item in items" class="message is-info">
+                        <article v-for="item in listItems" class="message is-info">
                             <div class="message-body level">
                                 <p clas="level-left"> {{item}} </p>
-                                <button class="level-right delete" @click="removeFromList(item)"></button>
+                                <button class="level-right delete" @click="deleteTodo"></button>
                             </div>
                         </article>
                     </div>
@@ -47,20 +49,22 @@
                     'Internet',
                     'Javascript',
                     'Vue js'
-                ]
+                ],
+                showUncompletedTodos: false
             },
+
+            computed: {
+                listItems() {
+                    return this.items;
+                }
+            },
+
             methods: {
 
-                removeFromList(item) {
-                    var index = this.items.indexOf(item)
-                    if(index > -1) {
-                        this.items.splice(index, 1);
-                    }
+                deleteTodo() {
                 },
 
-                addToList() {
-                    this.items.push(this.newItem)
-                    this.newItem = ''
+                addTodo() {
                 }
             }
         })
